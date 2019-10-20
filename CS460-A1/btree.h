@@ -36,6 +36,11 @@ struct entry
    int value;
 };
 
+struct nodePosition {
+    struct node* b;
+    int index;
+};
+
 struct node {
     struct entry keys[FANOUT-1];
     struct node *pointers[FANOUT];
@@ -64,7 +69,14 @@ void insert(int key, int value){
 
     else
     {
-
+        struct nodePosition bdata = find(key);
+        if (bdata.b->num_keys == FANOUT) {
+            //split node
+        }
+        else {
+            //insert struct in node
+            bdata.b->keys[bdata.index] = newEntry;
+        }
         
         
     }
@@ -73,28 +85,26 @@ void insert(int key, int value){
 };
 
 
-struct node* find(int key){
+nodePosition find(int key){
     //create a pointer to the root node
     struct node *b;
     b =  &root;
     while (!b->is_leaf)
         {
-            int index;
+            struct nodePosition bdata;
             //perform a linear search in the node key-value array to 
             //find the right one
             for (int i=0; i<= FANOUT; i++){
                 if (key < (b->keys[i]).key){
-                    b = b->pointers[i-1];
-                    index = i;
+                    bdata.b = b->pointers[i-1];
+                    bdata.index = i;
                 }
                 else if ((key > (b->keys[i]).key && key <= (b->keys[i+1]).key) || key > (b->keys[i]).key ) {
-                    b = b->pointers[i+1];
-                    index = i;
+                    bdata.b = b->pointers[i+1];
+                    bdata.index = i;
                 }
             }
-        
-
-            return b;
+            return bdata;
         }
 };
 // TODO: here you will need to define a B+Tree node(s) struct(s)
