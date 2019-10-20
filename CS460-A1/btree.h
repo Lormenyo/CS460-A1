@@ -64,23 +64,38 @@ void insert(int key, int value){
 
     else
     {
-        while (!b->is_leaf)
-        {
-            //perform a linear search in the node key-value array to 
-            //find the right one
-            for (int i=0; i<= FANOUT; i++){
-                if (key<b->keys[i]){
-                    
-                }
-            }
-        
 
-            
-        }
+        
         
     }
     
 
+};
+
+
+struct node* find(int key){
+    //create a pointer to the root node
+    struct node *b;
+    b =  &root;
+    while (!b->is_leaf)
+        {
+            int index;
+            //perform a linear search in the node key-value array to 
+            //find the right one
+            for (int i=0; i<= FANOUT; i++){
+                if (key < (b->keys[i]).key){
+                    b = b->pointers[i-1];
+                    index = i;
+                }
+                else if ((key > (b->keys[i]).key && key <= (b->keys[i+1]).key) || key > (b->keys[i]).key ) {
+                    b = b->pointers[i+1];
+                    index = i;
+                }
+            }
+        
+
+            return b;
+        }
 };
 // TODO: here you will need to define a B+Tree node(s) struct(s)
 
