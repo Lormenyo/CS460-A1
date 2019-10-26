@@ -15,88 +15,102 @@
 
 
 //INITIALIZERS/FUNCTION PROTOTYPES
-void insert(int key, int value);
-struct nodePosition find(int key);
+void insert(int key, int *pointerToValue);
+struct genNode* find(int key);
 
 #define FANOUT 100
 
-struct entry
-{
-   int key;
-   int value;
-};
-
-struct nodePosition {
-    struct node* b;
-    int index;
-};
-
-struct node {
-    struct entry keys[FANOUT-1];
-    struct node *pointers[FANOUT];
+typedef struct genNode {
+    int keys[FANOUT-1];
+    struct genNode *pointers[FANOUT];
     bool is_leaf;
     int num_keys;
-    struct node *next;
-    struct node *prev;
-};
+} genNode;
 
-struct node root;
-
-void insert(int key, int value){
-    //create a new structure from the key-value pair
-    struct entry newEntry;
-    newEntry.key = key;
-    newEntry.value = value;
-
-    //create a pointer to the root node
-    struct node *b;
-    b =  &root;
-
-    //chek if the root node is null, if so, insert the struct
-    if (!b->keys){
-        root.keys[0] = newEntry;
-    }
-
-    else
-    {
-        struct nodePosition bdata = find(key);
-        if (bdata.b->num_keys == FANOUT) {
-            //split node
-        }
-        else {
-            //insert struct in node
-            bdata.b->keys[bdata.index] = newEntry;
-        }
-        
-        
-    }
-    
-
-};
+struct genNode *root = NULL;
 
 
-struct nodePosition find(int key){
-    //create a pointer to the root node
-    struct node *b;
-    b =  &root;
-    while (!b->is_leaf)
+struct genNode* find(int target_key){
+    //returns leaf node for the given key parameter
+
+    genNode *currentNode = root;  //initialise current node to root node
+
+    while (!currentNode->is_leaf)
         {
-            struct nodePosition bdata;
-            //perform a linear search in the node key-value array to 
-            //find the right one
-            for (int i=0; i<= FANOUT; i++){
-                if (key < (b->keys[i]).key){
-                    bdata.b = b->pointers[i-1];
-                    bdata.index = i;
+            for (int i=0; i<= FANOUT-1; i++){
+                if (currentNode->keys[i] == target_key){
+                    currentNode = currentNode->pointers[i+1];
                 }
-                else if ((key > (b->keys[i]).key && key <= (b->keys[i+1]).key) || key > (b->keys[i]).key ) {
-                    bdata.b = b->pointers[i+1];
-                    bdata.index = i;
+                else if (currentNode->keys[i] < target_key){
+                    currentNode = currentNode->pointers[i];
+                }
+                else {
+                    currentNode = currentNode->pointers[FANOUT];
                 }
             }
-            return bdata;
         }
+        return currentNode;
 };
+
+void insert_in_leaf(genNode* node, int key, int *PointerToValue){
+    printf("Inserting into leaf");
+    if (key < node->keys[1]){
+
+    }
+    else{
+        int i, insert_index;
+        insert_index=0;
+        while(insert_index < node->num_keys && node->keys[insert_index] < key){
+            insert_index++;
+        }
+
+	for (i = node->num_keys; i > insert_index; i--) {
+		node->keys[i] = node->keys[i - 1];
+		node->pointers[i] = node->pointers[i - 1];
+	}
+	node->keys[insert_index] = key;
+	node->pointers[insert_index] = PointerToValue;
+	node->num_keys++;
+	//return leaf;        
+
+    }
+
+};
+
+void insert(int key, int *PointerToValue){
+    if (root==NULL){
+        //initialise empty leaf Node
+        genNode* leafNode = create_leaf();
+    }
+    else
+    {
+        genNode* leafNode = find(key);
+    }
+
+    if (leafNode->num_keys<FANOUT-1){
+        insert_in_leaf(leafNode, key, PointerToValue);
+    }
+};
+
+genNode* create_node(void){
+    genNode* newNode;
+
+    newNode = (struct genNode*) malloc(sizeof(genNode));
+    if (newNode==NULL){
+        perror("Node creation ");
+        exit(EXIT_FAILURE);
+    }
+
+    newNode->num_keys = 0;
+    newNode->is_leaf  = false;
+
+};
+
+genNode* create_leaf(void){
+    genNode* leaf = create_node();
+    leaf -> is_leaf = true;
+    return leaf;
+}
 
 
 
