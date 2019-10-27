@@ -15,8 +15,10 @@
 
 
 //INITIALIZERS/FUNCTION PROTOTYPES
-void insert(int key, int *pointerToValue);
+void insert(int key, int value);
 struct genNode* find(int key);
+struct genNode* create_leaf();
+struct genNode* create_node();
 
 #define FANOUT 100
 
@@ -52,7 +54,9 @@ struct genNode* find(int target_key){
         return currentNode;
 };
 
-void insert_in_leaf(genNode* node, int key, int *PointerToValue){
+void insert_in_leaf(genNode* node, int key, int value){
+    struct genNode* ptr_to_value ;
+
     printf("Inserting into leaf");
     if (key < node->keys[1]){
 
@@ -69,7 +73,7 @@ void insert_in_leaf(genNode* node, int key, int *PointerToValue){
 		node->pointers[i] = node->pointers[i - 1];
 	}
 	node->keys[insert_index] = key;
-	node->pointers[insert_index] = PointerToValue;
+	node->pointers[insert_index] = ptr_to_value;
 	node->num_keys++;
 	//return leaf;        
 
@@ -77,18 +81,20 @@ void insert_in_leaf(genNode* node, int key, int *PointerToValue){
 
 };
 
-void insert(int key, int *PointerToValue){
+void insert(int key, int value){
+    genNode* leafNode;
+
     if (root==NULL){
         //initialise empty leaf Node
-        genNode* leafNode = create_leaf();
+       leafNode = create_leaf();
     }
     else
     {
-        genNode* leafNode = find(key);
+        leafNode = find(key);
     }
 
     if (leafNode->num_keys<FANOUT-1){
-        insert_in_leaf(leafNode, key, PointerToValue);
+        insert_in_leaf(leafNode, key, value);
     }
 };
 
