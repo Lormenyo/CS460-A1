@@ -19,6 +19,7 @@ void insert(int key, int value);
 struct genNode* find(int key);
 struct genNode* create_leaf();
 struct genNode* create_node();
+void print_bpt();
 
 #define FANOUT 100
 
@@ -116,6 +117,11 @@ genNode* create_leaf(void){
     genNode* leaf = create_node();
     leaf -> is_leaf = true;
     return leaf;
+}
+
+void print_bpt(){
+    printf("%d",root->keys[0]);
+    printf("root->keys");
 }
 
 

@@ -67,6 +67,9 @@ int parseRouteQuery(char queryLine[], STORAGECXT_t *store){
 
 int main(int argc, char *argv[]) 
 { 
+    printf("Creating a b+ tree");
+    printf("Please work");
+    print_bpt();
 	int opt; 
 
     // initial command line argument parsing

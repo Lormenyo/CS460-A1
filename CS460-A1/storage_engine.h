@@ -19,7 +19,7 @@
  */
 typedef struct storageContext {
     //pointer that points to the b+ tree
-    genNode *bpt;
+    genNode *root;
     
 } STORAGECXT_t;
 
