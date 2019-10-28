@@ -18,7 +18,9 @@
  *      while thinking about memory management and pointers for accessing your B+Tree.
  */
 typedef struct storageContext {
-    // TODO: you hold a pointer here to find your B+Tree
+    //pointer that points to the b+ tree
+    genNode *bpt;
+    
 } STORAGECXT_t;
 
 
@@ -53,6 +55,8 @@ int wrapperGet(STORAGECXT_t **storageEngine, KEY_t targetKey, VAL_t *foundVal){
     (void) targetKey;
     (void) foundVal;
 
+    find(targetKey);
+
     return 0;
 }
 
@@ -79,7 +83,9 @@ int wrapperPut(STORAGECXT_t **storageEngine, KEY_t key, VAL_t val){
     (void) storageEngine;
     (void) key;
     (void) val;
-    
+
+    // insert(*storageEngine->bpt, key, val);
+    insert(key, val);
     return 0;
 }
 

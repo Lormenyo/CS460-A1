@@ -103,7 +103,7 @@ genNode* create_node(void){
 
     newNode = (struct genNode*) malloc(sizeof(genNode));
     if (newNode==NULL){
-        perror("Node creation ");
+        perror("Cration of the Node ");
         exit(EXIT_FAILURE);
     }
 
